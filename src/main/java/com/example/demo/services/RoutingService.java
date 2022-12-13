@@ -1,13 +1,10 @@
 package com.example.demo.services;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +21,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.example.demo.classes.CountryDataDto;
 import com.example.demo.classes.Path;
-import com.example.demo.enums.Region;
 import com.example.demo.exceptions.CountryNotFoundException;
 import com.example.demo.exceptions.PathNotFoundException;
 import com.example.demo.helpers.Graph;
 
 @Service
-public class PathCalculatorService {
+public class RoutingService {
     private static final String dataUrl = "https://raw.githubusercontent.com/mledoze/countries/master/countries.json";
     private RestTemplate restTemplate;
 
     @Autowired
-    public PathCalculatorService(RestTemplateBuilder builder) {
+    public RoutingService(RestTemplateBuilder builder) {
         this.restTemplate = builder
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
@@ -52,8 +48,7 @@ public class PathCalculatorService {
         CountryDataDto originCountry = countriesMap.get(origin);
         CountryDataDto destinationCountry = countriesMap.get(destination);
         this.validateCountries(originCountry, destinationCountry, origin, destination);
-        Queue<CountryDataDto> route = Graph.searchGraphPath(originCountry, destinationCountry,
-                countriesMap);
+        Queue<CountryDataDto> route = Graph.searchGraphPath(originCountry, destinationCountry, countriesMap);
         return new Path(route.stream()
                 .map(country -> country.getCca3())
                 .collect(Collectors.toList()));
@@ -71,7 +66,7 @@ public class PathCalculatorService {
 
         if (!originCountry.getRegion().isLandConnectionWith(destinationCountry)) {
             throw new PathNotFoundException(originCountry.getName().getOfficial() + " does not cross land with "
-                    + destinationCountry.getName().getOfficial(), HttpStatus.NOT_FOUND);
+                    + destinationCountry.getName().getOfficial(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -82,15 +77,5 @@ public class PathCalculatorService {
                 new ParameterizedTypeReference<List<CountryDataDto>>() {
                 });
         return response.getBody();
-    }
-
-    public boolean isLandConnection(CountryDataDto originCountry, CountryDataDto destinationCountry) {
-        List<Region> connectedRegions = new ArrayList<Region>(Arrays.asList(Region.AFRICA, Region.ASIA, Region.EUROPE));
-        if (originCountry.getRegion().equals(destinationCountry.getRegion())) {
-            return true;
-        } else {
-            return connectedRegions.contains(originCountry.getRegion())
-                    && connectedRegions.contains(destinationCountry.getRegion());
-        }
     }
 }

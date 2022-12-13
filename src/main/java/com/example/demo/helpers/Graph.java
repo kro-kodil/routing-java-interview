@@ -7,40 +7,41 @@ import java.util.Queue;
 import com.example.demo.classes.CountryDataDto;
 
 public class Graph {
-    public static Queue<CountryDataDto> searchGraphPath(CountryDataDto currentCountry,
+    public static Queue<CountryDataDto> searchGraphPath(CountryDataDto originCountry,
             CountryDataDto destinationCountry,
             Map<String, CountryDataDto> countriesMap) {
         // BFS Implementation
+        CountryDataDto currentCountry = originCountry;
         Map<CountryDataDto, Boolean> visited = new HashMap<>();
         Queue<CountryDataDto> queue = new LinkedList<>();
         Queue<CountryDataDto> path = new LinkedList<>();
 
         visited.put(currentCountry, true);
         queue.add(currentCountry);
-        path.add(currentCountry);
 
         while (queue.size() != 0) {
             currentCountry = queue.poll();
             path.add(currentCountry);
-            System.out.println("Current visitting: " + currentCountry.getCca3());
+            // System.out.println("Current visitting: " + currentCountry.getCca3());
 
             for (String border : currentCountry.getBorders()) {
                 CountryDataDto borderCountry = countriesMap.get(border);
                 if (borderCountry.getCca3().equals(destinationCountry.getCca3())) {
                     currentCountry = borderCountry;
                     path.add(currentCountry);
-                    System.out.println("Shortest path to: " + currentCountry.getCca3());
+                    // System.out.println("Shortest path to: " + currentCountry.getCca3());
                     return path;
                 }
 
                 if (!visited.containsKey(borderCountry)) {
                     visited.put(borderCountry, true);
-                    System.out.println("Border Country: " + borderCountry.getCca3());
+                    // System.out.println("Border Country: " + borderCountry.getCca3());
                     queue.add(borderCountry);
                 }
             }
-
-            path.remove(currentCountry);
+            if (!originCountry.getCca3().equals(currentCountry.getCca3())) {
+                path.remove(currentCountry);
+            }
         }
 
         return path;
