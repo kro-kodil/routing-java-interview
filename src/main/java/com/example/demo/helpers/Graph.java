@@ -16,26 +16,31 @@ public class Graph {
         Queue<CountryDataDto> queue = new LinkedList<>();
         Queue<CountryDataDto> path = new LinkedList<>();
 
+        if (originCountry.getCca3().equals(destinationCountry.getCca3())) {
+            path.add(currentCountry);
+            return path;
+        }
+
         visited.put(currentCountry, true);
         queue.add(currentCountry);
 
         while (queue.size() != 0) {
             currentCountry = queue.poll();
             path.add(currentCountry);
-            // System.out.println("Current visitting: " + currentCountry.getCca3());
+            System.out.println("Current visitting: " + currentCountry.getCca3());
 
             for (String border : currentCountry.getBorders()) {
                 CountryDataDto borderCountry = countriesMap.get(border);
                 if (borderCountry.getCca3().equals(destinationCountry.getCca3())) {
                     currentCountry = borderCountry;
                     path.add(currentCountry);
-                    // System.out.println("Shortest path to: " + currentCountry.getCca3());
+                    System.out.println("Shortest path to: " + currentCountry.getCca3());
                     return path;
                 }
 
                 if (!visited.containsKey(borderCountry)) {
                     visited.put(borderCountry, true);
-                    // System.out.println("Border Country: " + borderCountry.getCca3());
+                    System.out.println("Border Country: " + borderCountry.getCca3());
                     queue.add(borderCountry);
                 }
             }
