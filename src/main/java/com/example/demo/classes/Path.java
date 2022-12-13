@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Route {
+public class Path {
     private List<String> route = null;
 
-    public Route(List<String> route) {
+    public Path(List<String> route) {
         this.route = route;
     }
 
