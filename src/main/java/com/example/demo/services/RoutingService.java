@@ -48,7 +48,7 @@ public class RoutingService {
         CountryDataDto originCountry = countriesMap.get(origin);
         CountryDataDto destinationCountry = countriesMap.get(destination);
         this.validateCountries(originCountry, destinationCountry, origin, destination);
-        Queue<CountryDataDto> route = Graph.searchGraphPath(originCountry, destinationCountry, countriesMap);
+        List<CountryDataDto> route = Graph.searchGraphPath(originCountry, destinationCountry, countriesMap);
         return new Path(route.stream()
                 .map(country -> country.getCca3())
                 .collect(Collectors.toList()));
