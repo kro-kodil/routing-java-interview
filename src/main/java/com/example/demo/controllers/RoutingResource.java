@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.example.demo.classes.Route;
 import com.example.demo.services.RoutingService;
 
 @Controller
@@ -14,7 +16,7 @@ public class RoutingResource {
 
     @GetMapping("/calculate/{origin}/{destination}")
     @ResponseBody
-    public String calculate(@PathVariable String origin, @PathVariable String destination) {
+    public Route calculate(@PathVariable String origin, @PathVariable String destination) {
         return routingService.calculate(origin, destination);
     }
 
