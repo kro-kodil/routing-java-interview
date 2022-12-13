@@ -1,7 +1,7 @@
 # demo-java
 ### How to run
 
-build using Java 17.
+built using Java 17.
 
  - Build the application:
    - Windows: `mvnw.cmd clean install`
